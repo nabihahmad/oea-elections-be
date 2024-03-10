@@ -11,6 +11,7 @@ app.use(express.json());
 app.post('/vote/:number', async (req, res) => {
     let responseJson = {};
     let votes = db.collection('votes')
+    const { number } = req.params;
 
     // create an item in collection with key "leo"
     await votes.set(number, {vote:1})
@@ -23,6 +24,7 @@ app.post('/vote/:number', async (req, res) => {
 app.get('/vote/:number', async (req, res) => {
 	let responseJson = {};
     let votes = db.collection('votes')
+    const { number } = req.params;
 
     let item = await votes.get(number)
     if (item != null) {

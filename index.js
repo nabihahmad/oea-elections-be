@@ -27,7 +27,8 @@ app.get('/vote/:number', async (req, res) => {
     const { number } = req.params;
 
     let item = await votes.get(number)
-    if (item != null && item.vote == 1) {
+    console.log("item", item);
+    if (item != null && item.vote == "1") {
         responseJson.status = "voted";
     } else {
         responseJson.status = "didn't vote";

@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 app.use(express.json())
+app.use(cors({
+    origin: 'https://oea-vote.netlify.app',
+}));
 require('dotenv').config();
 const https = require("https");
 const CyclicDb = require("cyclic-dynamodb")

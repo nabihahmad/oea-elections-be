@@ -27,10 +27,25 @@ app.get('/vote/:number', async (req, res) => {
     const { number } = req.params;
 
     let item = await votes.get(number)
-    if (item != null) {
+    if (item != null && item.vote == 1) {
         responseJson.status = "voted";
     } else {
         responseJson.status = "didn't vote";
+    }
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify(responseJson));
+});
+
+app.delete('/vote/:number', async (req, res) => {
+	let responseJson = {};
+    let votes = db.collection('votes')
+    const { number } = req.params;
+
+    let item = await votes.set(number, {vote:0})
+    if (item != null) {
+        responseJson.status = "removed vote";
+    } else {
+        responseJson.status = "didn't remove vote";
     }
 	res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify(responseJson));

@@ -9,6 +9,7 @@ const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 app.use(express.json());
 
 app.post('/vote/:number', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
     let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;
@@ -22,6 +23,7 @@ app.post('/vote/:number', async (req, res) => {
 });
 
 app.get('/vote/:number', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
 	let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;
@@ -38,6 +40,7 @@ app.get('/vote/:number', async (req, res) => {
 });
 
 app.delete('/vote/:number', async (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
 	let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;

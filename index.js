@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 app.use(express.json())
+app.options('*', cors());
 app.use(cors({
     origin: 'https://oea-vote.netlify.app',
 }));

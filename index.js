@@ -12,10 +12,6 @@ const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 app.use(express.json());
 
 app.post('/vote/:number', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'POST');
-    res.header("Access-Control-Allow-Headers", "accept, content-type");
-    res.header("Access-Control-Max-Age", "1728000");
     let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;
@@ -29,10 +25,6 @@ app.post('/vote/:number', async (req, res) => {
 });
 
 app.get('/vote/:number', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'GET');
-    res.header("Access-Control-Allow-Headers", "accept, content-type");
-    res.header("Access-Control-Max-Age", "1728000");
 	let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;
@@ -49,10 +41,6 @@ app.get('/vote/:number', async (req, res) => {
 });
 
 app.delete('/vote/:number', async (req, res) => {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'DELETE');
-    res.header("Access-Control-Allow-Headers", "accept, content-type");
-    res.header("Access-Control-Max-Age", "1728000");
 	let responseJson = {};
     let votes = db.collection('votes')
     const { number } = req.params;

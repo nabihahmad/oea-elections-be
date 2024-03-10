@@ -6,6 +6,8 @@ const https = require("https");
 const CyclicDb = require("cyclic-dynamodb")
 const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 
+const table = db.table('Votes');
+
 app.use(express.json());
 
 // POST API to register numbers in the DB
@@ -16,7 +18,8 @@ app.post('/vote', async (req, res) => {
   }
 
   try {
-    await db.putItem('Votes', { number });
+    // await db.putItem('Votes', { number });
+    await table.putItem({number});
     res.json({ message: 'Number registered successfully' });
   } catch (error) {
     console.error('Error registering number:', error);
@@ -29,7 +32,8 @@ app.get('/vote/:number', async (req, res) => {
   const { number } = req.params;
 
   try {
-    const item = await db.getItem('Votes', { number });
+    // const item = await db.getItem('Votes', { number });
+    const item = await table.getItem({ number });
     const exists = !!item;
     res.json({ exists });
   } catch (error) {

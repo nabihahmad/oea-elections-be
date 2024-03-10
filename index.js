@@ -22,7 +22,9 @@ app.post('/vote/:number', async (req, res) => {
 
 app.get('/vote/:number', async (req, res) => {
 	let responseJson = {};
-    let item = await animals.get(number)
+    let votes = db.collection('votes')
+
+    let item = await votes.get(number)
     if (item != null) {
         responseJson.status = "voted";
     } else {

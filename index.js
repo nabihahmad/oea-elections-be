@@ -4,7 +4,7 @@ app.use(express.json())
 require('dotenv').config();
 const https = require("https");
 const CyclicDb = require("cyclic-dynamodb")
-const db = CyclicDb("prussian-blue-snail-tutuCyclicDB")
+const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 
 app.use(express.json());
 

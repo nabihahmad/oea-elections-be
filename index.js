@@ -10,8 +10,6 @@ const https = require("https");
 const CyclicDb = require("cyclic-dynamodb")
 const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 
-app.use(express.json());
-
 app.post('/vote/:number', async (req, res) => {
     let responseJson = {};
     let votes = db.collection('votes')

@@ -69,6 +69,9 @@ app.get('/votes/:number', async (req, res) => {
 
     let item = await votes.item("votes").fragment(number).get();
     console.log("item", item);
+    console.log("item", item[0]);
+    console.log("item", item[0].props);
+    console.log("item", item[0].props.vote);
     if (item != null && item.props.vote == 1) {
         responseJson.status = "voted";
     } else {

@@ -6,7 +6,6 @@ app.use(cors({
     origin: 'https://oea-vote.netlify.app',
 }));
 require('dotenv').config();
-const https = require("https");
 const CyclicDb = require("cyclic-dynamodb")
 const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 
@@ -17,6 +16,18 @@ app.post('/vote/:number', async (req, res) => {
 
     // create an item in collection with key "leo"
     await votes.set(number, {vote:1})
+
+    responseJson.status = "success";
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify(responseJson));
+});
+
+app.post('/votes/:number', async (req, res) => {
+    let responseJson = {};
+    let votes = db.collection('votes')
+    const { number } = req.params;
+
+    await votes.item("votes").fragment(number).set({vote:1})
 
     responseJson.status = "success";
 	res.setHeader('Content-Type', 'application/json');
@@ -39,6 +50,36 @@ app.get('/vote/:number', async (req, res) => {
 	res.send(JSON.stringify(responseJson));
 });
 
+app.get('/votes', async (req, res) => {
+	let responseJson = {};
+    let votes = db.collection('votes')
+
+    let votesItem = await votes.item("votes")
+    console.log("votesItem", votesItem);
+    
+    responseJson.status = votesItem;
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify(responseJson));
+});
+
+app.get('/votes/:number', async (req, res) => {
+	let responseJson = {};
+    let votes = db.collection('votes')
+    const { number } = req.params;
+
+    let votesItem = await votes.item("votes")
+    console.log("votesItem", votesItem);
+    let item = item.get(number)
+    console.log("item", item);
+    if (item != null && item.props.vote == 1) {
+        responseJson.status = "voted";
+    } else {
+        responseJson.status = "didn't vote";
+    }
+	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify(responseJson));
+});
+
 app.delete('/vote/:number', async (req, res) => {
 	let responseJson = {};
     let votes = db.collection('votes')
@@ -51,6 +92,18 @@ app.delete('/vote/:number', async (req, res) => {
         responseJson.status = "didn't remove vote";
     }
 	res.setHeader('Content-Type', 'application/json');
+	res.send(JSON.stringify(responseJson));
+});
+
+app.delete('/votes/:number', async (req, res) => {
+    let responseJson = {};
+    let votes = db.collection('votes')
+    const { number } = req.params;
+
+    await votes.item("votes").fragment(number).set({vote:0})
+    responseJson.status = "removed vote";
+	
+    res.setHeader('Content-Type', 'application/json');
 	res.send(JSON.stringify(responseJson));
 });
 

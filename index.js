@@ -54,7 +54,7 @@ app.get('/votes', async (req, res) => {
 	let responseJson = {};
     let votes = db.collection('votes');
 
-    let votesItem = await votes.item("votes");
+    let votesItem = await votes.item("votes").get();
     console.log("votesItem", votesItem);
     
     responseJson.status = votesItem;

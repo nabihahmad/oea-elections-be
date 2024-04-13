@@ -56,6 +56,12 @@ app.get('/votes', async (req, res) => {
 
     let votesItem = await votes.item("votes").get();
     console.log("votesItem", votesItem);
+
+    let votesItem2 = await votes.item("votes");
+    console.log("votesItem2", votesItem2);
+
+    let votesItem3 = await votes.get("votes");
+    console.log("votesItem3", votesItem3);
     
     responseJson.status = votesItem;
 	res.setHeader('Content-Type', 'application/json');

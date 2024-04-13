@@ -69,7 +69,7 @@ app.get('/votes/:number', async (req, res) => {
 
     let votesItem = await votes.item("votes")
     console.log("votesItem", votesItem);
-    let item = item.get(number)
+    let item = votesItem.get(number)
     console.log("item", item);
     if (item != null && item.props.vote == 1) {
         responseJson.status = "voted";

@@ -67,7 +67,7 @@ app.get('/votes/:number', async (req, res) => {
     let votes = db.collection('votes');
     const { number } = req.params;
 
-    let item = await votes.item("votes").fragment(number);
+    let item = await votes.item("votes").fragment(number).get();
     console.log("item", item);
     if (item != null && item.props.vote == 1) {
         responseJson.status = "voted";

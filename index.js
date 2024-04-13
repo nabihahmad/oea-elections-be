@@ -11,11 +11,11 @@ const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 
 app.post('/vote/:number', async (req, res) => {
     let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
     // create an item in collection with key "leo"
-    await votes.set(number, {vote:1})
+    await votes.set(number, {vote:1});
 
     responseJson.status = "success";
 	res.setHeader('Content-Type', 'application/json');
@@ -24,10 +24,10 @@ app.post('/vote/:number', async (req, res) => {
 
 app.post('/votes/:number', async (req, res) => {
     let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
-    await votes.item("votes").fragment(number).set({vote:1})
+    await votes.item("votes").fragment(number).set({vote:1});
 
     responseJson.status = "success";
 	res.setHeader('Content-Type', 'application/json');
@@ -36,7 +36,7 @@ app.post('/votes/:number', async (req, res) => {
 
 app.get('/vote/:number', async (req, res) => {
 	let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
     let item = await votes.get(number)
@@ -52,9 +52,9 @@ app.get('/vote/:number', async (req, res) => {
 
 app.get('/votes', async (req, res) => {
 	let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
 
-    let votesItem = await votes.item("votes")
+    let votesItem = await votes.item("votes");
     console.log("votesItem", votesItem);
     
     responseJson.status = votesItem;
@@ -64,12 +64,10 @@ app.get('/votes', async (req, res) => {
 
 app.get('/votes/:number', async (req, res) => {
 	let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
-    let votesItem = await votes.item("votes")
-    console.log("votesItem", votesItem);
-    let item = votesItem.get(number)
+    let item = await votes.item("votes").fragment(number);
     console.log("item", item);
     if (item != null && item.props.vote == 1) {
         responseJson.status = "voted";
@@ -82,10 +80,10 @@ app.get('/votes/:number', async (req, res) => {
 
 app.delete('/vote/:number', async (req, res) => {
 	let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
-    let item = await votes.set(number, {vote:0})
+    let item = await votes.set(number, {vote:0});
     if (item != null) {
         responseJson.status = "removed vote";
     } else {
@@ -97,10 +95,10 @@ app.delete('/vote/:number', async (req, res) => {
 
 app.delete('/votes/:number', async (req, res) => {
     let responseJson = {};
-    let votes = db.collection('votes')
+    let votes = db.collection('votes');
     const { number } = req.params;
 
-    await votes.item("votes").fragment(number).set({vote:0})
+    await votes.item("votes").fragment(number).set({vote:0});
     responseJson.status = "removed vote";
 	
     res.setHeader('Content-Type', 'application/json');

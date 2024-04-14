@@ -204,7 +204,8 @@ app.get('/mobile', async (req, res) => {
     let votes = db.collection('votes');
     let mobileItem = await votes.item("mobile").fragments();
     for (var i = 0; i < mobileItem.length; i++) {
-        responseJson[i] = {"id": mobileItem[i], "mobile": mobileItem[i]};
+        let item = await votes.item("mobile").fragment(mobileItem[i]).get();
+        responseJson[i] = {"id": mobileItem[i], "mobile": item[0].props.mobile};
     }
 
     const fields = [{

@@ -10,6 +10,49 @@ require('dotenv').config();
 const CyclicDb = require("cyclic-dynamodb")
 const db = CyclicDb("long-lime-mussel-garbCyclicDB")
 var { Parser } = require('json2csv')
+const data = require('./data/data.json');
+
+app.get('/report', async (req, res) => {
+    try {
+        let responseJson = {};
+        let toBeCheckedCodes = [];
+        let votedCodes = [];
+        let notVotedCodes = 0;
+        let votes = db.collection('votes');
+        for (let i = 0; i < data.length; i++) {
+            const code = data[i].Code;
+            const strCode = code.toString();
+            if (strCode.startsWith('64778') || strCode.startsWith('64779')
+                || strCode.startsWith('6478') || strCode.startsWith('6479')
+                || strCode.startsWith('648') || strCode.startsWith('649')
+                || strCode.startsWith('65') || strCode.startsWith('66') || strCode.startsWith('67')
+                || strCode.startsWith('68') || strCode.startsWith('69') 
+                || strCode.startsWith('7') || strCode.startsWith('8') || strCode.startsWith('9')) {
+                toBeCheckedCodes.push(strCode);
+                let item = await votes.item("votes").fragment(strCode).get();
+                if (item[0] != null && item[0].props.vote == 1) {
+                    // Code exists in the collection
+                    console.log(`Code ${code} voted`);
+                    votedCodes.push(strCode);
+                } else {
+                    // Code does not exist in the collection
+                    console.log(`Code ${code} didn't vote`);
+                    notVotedCodes++;
+                }
+            }
+        }
+        responseJson.status = "success";
+        responseJson.length = toBeCheckedCodes.length;
+        responseJson.voted = votedCodes;
+        responseJson.notVotedCodes = notVotedCodes;
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(responseJson));
+    } catch (error) {
+        console.log('Error:', error.message);
+        res.setHeader('Content-Type', 'application/json');
+        res.status(500).send(error.message)
+    }
+});
 
 app.post('/vote/:number', async (req, res) => {
     let responseJson = {};
@@ -53,19 +96,34 @@ app.get('/vote/:number', async (req, res) => {
 });
 
 app.get('/votes', async (req, res) => {
-    let responseJson = [];
-    let votes = db.collection('votes');
-    let votesItem = await votes.item("votes").fragments();
-    for (var i = 0; i < votesItem.length; i++) {
-        responseJson[i] = {"id": votesItem[i]};
-    }
-
+    const include = req.query.include;
     const fields = [{
+        label: 'OEA ID',
+        value: 'id'
+    },{
+        label: 'Datetime',
+        value: 'date'
+    }]
+
+    const fieldsNoDate = [{
         label: 'OEA ID',
         value: 'id'
     }]
 
-    const json2csv = new Parser({ fields: fields })
+    const json2csv = new Parser({ fields: (include != null && include == "date") ? fields : fieldsNoDate })
+
+    let lastEvaluatedKey = null;
+    let responseJson = [];
+    let votes = db.collection('votes');
+    let votesItem = await votes.item("votes").fragments();
+    for (var i = 0; i < votesItem.length; i++) {
+        if (include != null && include == "date") {
+            let item = await votes.item("votes").fragment(votesItem[i]).get();
+            responseJson[i] = {"id": votesItem[i], "date": item[0].props.created};
+        } else {
+            responseJson[i] = {"id": votesItem[i]};
+        }
+    }
 
     try {
         const csv = json2csv.parse(responseJson)

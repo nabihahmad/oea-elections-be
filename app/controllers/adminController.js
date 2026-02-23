@@ -22,6 +22,16 @@ exports.getAdmin = async (req, res) => {
     }
 };
 
+exports.listAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find({}, '-password');
+        res.json(admins);
+    } catch (error) {
+        console.error("Error listing admins:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 exports.createAdmin = async (req, res) => {
     try {
         const { username, full_name, roles, password } = req.body;

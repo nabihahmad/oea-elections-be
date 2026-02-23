@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const engineerController = require("../controllers/reportingController");
+const reportingController = require("../controllers/reportingController");
+
+router.get("/main-counts", reportingController.getMainCounts);
+router.get("/votes-timeseries", reportingController.getVotesTimeSeries);
 
 module.exports = router;

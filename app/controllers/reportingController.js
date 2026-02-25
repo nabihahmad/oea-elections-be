@@ -3,6 +3,7 @@ const Vote = require('../models/Vote');
 
 exports.getMainCounts = async (req, res) => {
     try {
+        const totalRegisteredEngineers = await Engineer.countDocuments();
         const totalEligibleEngineers = await Engineer.countDocuments({ settlement_year: { $eq: "2025" } });
         const checkedInEngineers = await Engineer.countDocuments({ checked_in_at: { $ne: null } });
         const totalVotes = await Vote.countDocuments();
@@ -10,6 +11,7 @@ exports.getMainCounts = async (req, res) => {
         const totalMobileNumbers = await Engineer.countDocuments({ mobile: { $ne: null } });
 
         res.json({
+            totalRegisteredEngineers,
             totalEligibleEngineers,
             checkedInEngineers,
             totalVotes,

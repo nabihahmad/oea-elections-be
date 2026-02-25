@@ -7,8 +7,8 @@ const voteSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    voted_at: { type: Date, default: Date.now },
-    recordedBy: String,
+    voted_at: { type: Date },
+    recorded_by: String,
 });
 
 module.exports = mongoose.model('Vote', voteSchema);

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require("../../config/env");
 
-const authMiddleware = (requiredRole) => {
+const authMiddleware = (requiredRoles) => {
     return (req, res, next) => {
         
         const token = req.headers.authorization?.split(' ')[1];
@@ -17,7 +17,7 @@ const authMiddleware = (requiredRole) => {
                 return res.status(401).json({ error: 'Invalid token' });
             }
 
-            if (requiredRole && decoded.roles && !decoded.roles.includes(requiredRole)) {
+            if (requiredRoles && decoded.roles && !decoded.roles.some(role => requiredRoles.includes(role))) {
                 return res.status(403).json({ error: 'Insufficient permissions' });
             }
 

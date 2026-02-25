@@ -34,7 +34,7 @@ exports.listAdmins = async (req, res) => {
 
 exports.createAdmin = async (req, res) => {
     try {
-        const { username, full_name, roles, password } = req.body;
+        const { username, full_name, roles, password, ballot_box } = req.body;
         if (!username || !password) {
             return res.status(400).json({ error: "Missing username or password in request body" });
         }
@@ -44,7 +44,7 @@ exports.createAdmin = async (req, res) => {
             return res.status(400).json({ error: "Username already exists" });
         }
 
-        const newAdmin = new Admin({ username, full_name, roles, password: bcrypt.hashSync(password, 10) });
+        const newAdmin = new Admin({ username, full_name, roles, password: bcrypt.hashSync(password, 10), ballot_box: ballot_box || -1 });
         await newAdmin.save();
 
         const newAdminResponse = newAdmin.toObject();
@@ -59,7 +59,7 @@ exports.createAdmin = async (req, res) => {
 exports.updateAdmin = async (req, res) => {
     try {
         const { adminId } = req.params;
-        const { username, full_name, roles, password } = req.body;
+        const { username, full_name, roles, password, ballot_box } = req.body;
         if (!adminId) {
             return res.status(400).json({ error: "Missing adminId parameter" });
         }
@@ -73,7 +73,8 @@ exports.updateAdmin = async (req, res) => {
         if (full_name) admin.full_name = full_name;
         if (roles) admin.roles = roles;
         if (password) admin.password = bcrypt.hashSync(password, 10);
-
+        if (ballot_box !== undefined) admin.ballot_box = ballot_box;
+        
         await admin.save();
         
         const adminResponse = admin.toObject();

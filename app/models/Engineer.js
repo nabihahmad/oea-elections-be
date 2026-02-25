@@ -11,9 +11,9 @@ const engineerSchema = new mongoose.Schema({
     graduation_year: Number,
     branch: String,
     mobile: String,
-    mobile_updated_at: { type: Date, default: Date.now },
+    mobile_updated_at: { type: Date },
     mobile_updated_by: String,
-    checked_in_at: { type: Date, default: Date.now },
+    checked_in_at: { type: Date },
     checked_in_by: String,
 });
 
